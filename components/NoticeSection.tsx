@@ -6,82 +6,55 @@ import NoticeCard from './notices/NoticeCard';
 import NoticeDetailModal from './notices/NoticeDetailModal';
 import { Notice } from '@/types/notice';
 import { useState } from 'react';
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from '@/lib/mockData';
 
-// Sample notices data - this will be replaced with API calls in the future
-const sampleNotices: Notice[] = [
-  {
-    id: '1',
-    title: 'National Shotokan Championship 2024',
-    content: 'We are excited to announce the upcoming National Shotokan Championship 2024. This prestigious tournament will bring together the finest karate practitioners from across Bangladesh. Registration is now open for all belt levels. The event will feature individual kata and kumite competitions, team events, and special demonstrations by master instructors.',
-    category: 'tournament',
-    date: '2024-03-15',
-    createdAt: new Date('2024-01-15'),
-    location: 'National Sports Complex, Dhaka',
-    organizer: 'Bangladesh Karate Federation',
-    registrationDeadline: '2024-02-28T23:59:59'
-  },
-  {
-    id: '2',
-    title: 'New Training Schedule Effective February 2024',
-    content: 'Please note that starting February 1st, 2024, we will be implementing a new training schedule to better accommodate our growing membership. Evening classes will now start 30 minutes earlier, and we are adding weekend morning sessions for beginners. All members are requested to check the updated timetable posted on our notice board.',
-    category: 'notice',
-    date: '2024-01-28',
-    createdAt: new Date('2024-01-28')
-  },
-  {
-    id: '3',
-    title: 'Belt Grading Examination - March 2024',
-    content: 'The quarterly belt grading examination is scheduled for March 10th, 2024. Students who have completed the required training hours and wish to advance to the next belt level should submit their applications by February 25th. The examination will cover kata performance, basic techniques, and sparring skills appropriate to each belt level.',
-    category: 'event',
-    date: '2024-03-10',
-    createdAt: new Date('2024-01-20'),
-    location: 'SKB Main Dojo, Gulshan',
-    organizer: 'SKB Grading Committee'
-  },
-  {
-    id: '4',
-    title: 'Dojo Maintenance and Cleaning Day',
-    content: 'We will be conducting our monthly dojo maintenance and deep cleaning on January 30th, 2024. All classes scheduled for that day will be cancelled. We encourage all members to volunteer and help maintain our training facility. Light refreshments will be provided for all volunteers.',
-    category: 'notice',
-    date: '2024-01-30',
-    createdAt: new Date('2024-01-18')
-  },
-  {
-    id: '5',
-    title: 'Guest Instructor Workshop - Advanced Kata Techniques',
-    content: 'We are honored to host Sensei Takeshi Yamamoto, 7th Dan, for a special workshop on advanced kata techniques. This exclusive session will focus on the finer points of kata performance, breathing techniques, and the spiritual aspects of karate practice. Limited seats available - registration required.',
-    category: 'event',
-    date: '2024-02-20',
-    createdAt: new Date('2024-01-12'),
-    location: 'SKB Main Dojo, Gulshan',
-    organizer: 'Shotokan Karate Bangladesh'
-  },
-  {
-    id: '6',
-    title: 'Updated Safety Protocols',
-    content: 'In line with our commitment to student safety, we have updated our dojo safety protocols. All students must now wear appropriate protective gear during sparring sessions. New safety equipment is available for purchase at the dojo reception. Please familiarize yourself with the updated guidelines.',
-    type: 'announcement',
-    date: '2024-01-10',
-    createdAt: new Date('2024-01-10')
-  },
-  {
-    id: '7',
-    title: 'Inter-Dojo Friendship Tournament',
-    content: 'Join us for our annual Inter-Dojo Friendship Tournament where we welcome students from partner dojos across the region. This friendly competition emphasizes sportsmanship, technique, and cultural exchange. Spectators are welcome, and there will be food stalls and cultural performances.',
-    type: 'event',
-    date: '2024-04-05',
-    createdAt: new Date('2024-01-08')
-  }
-];
+// Convert mock notices to frontend Notice format
+const convertMockNoticeToFrontend = (mockNotice: any): Notice => ({
+  id: mockNotice._id,
+  title: mockNotice.title,
+  content: mockNotice.content,
+  category: mockNotice.category,
+  date: mockNotice.date,
+  createdAt: new Date(mockNotice.createdAt),
+  location: mockNotice.location,
+  organizer: mockNotice.organizer,
+  contactInfo: mockNotice.contactInfo,
+  rules: mockNotice.rules,
+  prizeStructure: mockNotice.prizeStructure,
+  registrationDeadline: mockNotice.registrationDeadline,
+  maxParticipants: mockNotice.maxParticipants,
+  currentParticipants: mockNotice.currentParticipants
+});
 
 export default function NoticeSection() {
+  const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Sort notices by creation date (newest first) and take only the 5 most recent
-  const recentNotices = sampleNotices
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    .slice(0, 5);
+  useEffect(() => {
+    fetchRecentNotices();
+  }, []);
+
+  const fetchRecentNotices = async () => {
+    try {
+      setLoading(true);
+      // MOCK DATA FETCH - TEMPORARY REPLACEMENT FOR BACKEND
+      const data = await mockApi.getNotices({ limit: 5 });
+      
+      if (data.success) {
+        const convertedNotices = data.data.notices.map(convertMockNoticeToFrontend);
+        // Sort by creation date (newest first)
+        const sortedNotices = convertedNotices.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        setRecentNotices(sortedNotices);
+      }
+    } catch (error) {
+      console.error('Error fetching notices:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNoticeClick = (notice: Notice) => {
     setSelectedNotice(notice);
@@ -117,7 +90,7 @@ export default function NoticeSection() {
         </div>
 
         {/* Loading State Placeholder */}
-        {recentNotices.length === 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(5)].map((_, index) => (
               <div key={index} className="animate-pulse">
@@ -134,6 +107,12 @@ export default function NoticeSection() {
                 </div>
               </div>
             ))}
+          </div>
+        ) : recentNotices.length === 0 ? (
+          <div className="text-center py-12">
+            <Bell className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No notices available</h3>
+            <p className="text-gray-500">Check back later for updates.</p>
           </div>
         ) : (
           /* Notices Grid */

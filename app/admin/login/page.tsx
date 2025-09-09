@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Eye, EyeOff, Shield, Loader2 } from "lucide-react";
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from "@/lib/mockData";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -33,6 +35,9 @@ export default function AdminLoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     
+    // COMMENTED OUT - ORIGINAL BACKEND LOGIN
+    // TODO: Uncomment when reconnecting to backend
+    /*
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
@@ -57,6 +62,35 @@ export default function AdminLoginPage() {
       } else {
         toast.error("Login failed", {
           description: data.message || "Invalid credentials",
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error("Login failed", {
+        description: "Unable to connect to server. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+    */
+    
+    // MOCK LOGIN - TEMPORARY REPLACEMENT
+    try {
+      const result = await mockApi.login(values);
+      
+      if (result.success) {
+        // Store token in localStorage (same as original)
+        localStorage.setItem('adminToken', result.data.token);
+        localStorage.setItem('adminUser', JSON.stringify(result.data.user));
+        
+        toast.success("Login successful!", {
+          description: `Welcome back, ${result.data.user.username}!`,
+        });
+        
+        router.push('/admin/dashboard');
+      } else {
+        toast.error("Login failed", {
+          description: result.message || "Invalid credentials",
         });
       }
     } catch (error) {

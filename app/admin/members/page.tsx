@@ -10,7 +10,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Plus, Edit, Trash2, Eye, Filter } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { makeAuthenticatedRequest } from "@/lib/auth";
+// COMMENTED OUT - ORIGINAL BACKEND IMPORT
+// import { makeAuthenticatedRequest } from "@/lib/auth";
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from "@/lib/mockData";
 import { toast } from "sonner";
 
 interface Member {
@@ -48,8 +51,15 @@ export default function AdminMembersPage() {
   const fetchMembers = async () => {
     try {
       setLoading(true);
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest('http://localhost:5000/api/members?limit=100');
       const data = await response.json();
+      */
+      
+      // MOCK DATA FETCH - TEMPORARY REPLACEMENT
+      const data = await mockApi.getMembers({ limit: 100, search: searchTerm, belt: selectedBelt === 'all' ? undefined : selectedBelt });
       
       if (data.success) {
         setMembers(data.data.members);
@@ -68,12 +78,18 @@ export default function AdminMembersPage() {
     if (!confirm('Are you sure you want to delete this member?')) return;
 
     try {
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest(
         `http://localhost:5000/api/members/${memberId}`,
         { method: 'DELETE' }
       );
-      
       const data = await response.json();
+      */
+      
+      // MOCK DELETE - TEMPORARY REPLACEMENT
+      const data = await mockApi.deleteMember(memberId);
       
       if (data.success) {
         toast.success("Member deleted successfully");

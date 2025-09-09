@@ -8,7 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Plus, Edit, Trash2, Upload, Image as ImageIcon } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { makeAuthenticatedRequest } from "@/lib/auth";
+// COMMENTED OUT - ORIGINAL BACKEND IMPORT
+// import { makeAuthenticatedRequest } from "@/lib/auth";
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from "@/lib/mockData";
 import { toast } from "sonner";
 import Image from 'next/image';
 
@@ -41,8 +44,18 @@ export default function AdminGalleryPage() {
   const fetchImages = async () => {
     try {
       setLoading(true);
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest('http://localhost:5000/api/gallery?limit=100');
       const data = await response.json();
+      */
+      
+      // MOCK DATA FETCH - TEMPORARY REPLACEMENT
+      const data = await mockApi.getGalleryImages({ 
+        limit: 100, 
+        category: selectedCategory === 'all' ? undefined : selectedCategory 
+      });
       
       if (data.success) {
         setImages(data.data.images);
@@ -61,12 +74,18 @@ export default function AdminGalleryPage() {
     if (!confirm('Are you sure you want to delete this image?')) return;
 
     try {
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest(
         `http://localhost:5000/api/gallery/${imageId}`,
         { method: 'DELETE' }
       );
-      
       const data = await response.json();
+      */
+      
+      // MOCK DELETE - TEMPORARY REPLACEMENT
+      const data = await mockApi.deleteGalleryImage(imageId);
       
       if (data.success) {
         toast.success("Image deleted successfully");

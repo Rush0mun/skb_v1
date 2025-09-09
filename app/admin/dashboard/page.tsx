@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Bell, Image, Trophy, TrendingUp, Calendar } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { makeAuthenticatedRequest } from "@/lib/auth";
+// COMMENTED OUT - ORIGINAL BACKEND IMPORT
+// import { makeAuthenticatedRequest } from "@/lib/auth";
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from "@/lib/mockData";
 
 interface DashboardStats {
   totalMembers: number;
@@ -34,6 +37,9 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       
+      // COMMENTED OUT - ORIGINAL BACKEND REQUESTS
+      // TODO: Uncomment when reconnecting to backend
+      /*
       // Fetch data from multiple endpoints
       const [membersRes, noticesRes, galleryRes] = await Promise.all([
         makeAuthenticatedRequest('http://localhost:5000/api/members?limit=1'),
@@ -66,6 +72,16 @@ export default function AdminDashboard() {
         totalGalleryImages: galleryData.data?.pagination?.total || 0,
         recentRegistrations: Math.floor(Math.random() * 10) + 1, // Mock data
       });
+      */
+      
+      // MOCK DATA FETCH - TEMPORARY REPLACEMENT
+      const result = await mockApi.getDashboardStats();
+      
+      if (result.success) {
+        setStats(result.data);
+      } else {
+        console.error('Failed to fetch dashboard stats');
+      }
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
     } finally {

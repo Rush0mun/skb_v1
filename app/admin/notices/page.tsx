@@ -9,7 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Plus, Edit, Trash2, Eye, Bell, Users, Trophy } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { makeAuthenticatedRequest } from "@/lib/auth";
+// COMMENTED OUT - ORIGINAL BACKEND IMPORT
+// import { makeAuthenticatedRequest } from "@/lib/auth";
+// MOCK DATA IMPORT - TEMPORARY
+import { mockApi } from "@/lib/mockData";
 import { toast } from "sonner";
 
 interface Notice {
@@ -39,8 +42,15 @@ export default function AdminNoticesPage() {
   const fetchNotices = async () => {
     try {
       setLoading(true);
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest('http://localhost:5000/api/notices?limit=100');
       const data = await response.json();
+      */
+      
+      // MOCK DATA FETCH - TEMPORARY REPLACEMENT
+      const data = await mockApi.getNotices({ limit: 100, category: activeTab === 'all' ? undefined : activeTab });
       
       if (data.success) {
         setNotices(data.data.notices);
@@ -59,12 +69,18 @@ export default function AdminNoticesPage() {
     if (!confirm('Are you sure you want to delete this notice?')) return;
 
     try {
+      // COMMENTED OUT - ORIGINAL BACKEND REQUEST
+      // TODO: Uncomment when reconnecting to backend
+      /*
       const response = await makeAuthenticatedRequest(
         `http://localhost:5000/api/notices/${noticeId}`,
         { method: 'DELETE' }
       );
-      
       const data = await response.json();
+      */
+      
+      // MOCK DELETE - TEMPORARY REPLACEMENT
+      const data = await mockApi.deleteNotice(noticeId);
       
       if (data.success) {
         toast.success("Notice deleted successfully");

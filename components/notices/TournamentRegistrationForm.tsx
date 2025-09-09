@@ -50,21 +50,49 @@ export default function TournamentRegistrationForm({
 
     setIsSubmitting(true);
     
+    // COMMENTED OUT - ORIGINAL BACKEND SUBMISSION
+    // TODO: Uncomment when reconnecting to backend
+    /*
     try {
-      // Simulate API call - replace with actual API endpoint
+      const response = await fetch('/api/tournaments/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...values,
+          tournamentId: tournament.id
+        })
+      });
+      
+      if (!response.ok) throw new Error('Registration failed');
+      
+      setIsSuccess(true);
+      toast.success("Registration successful!", {
+        description: `You have been registered for ${tournament.title}`,
+        duration: 5000,
+      });
+      
+      form.reset();
+      
+      setTimeout(() => {
+        setIsSuccess(false);
+        onClose();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error("Registration failed", {
+        description: "Please try again or contact support if the problem persists.",
+        duration: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+    */
+    
+    // MOCK TOURNAMENT REGISTRATION - TEMPORARY REPLACEMENT
+    try {
+      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Here you would make the actual API call to your MERN backend
-      // const response = await fetch('/api/tournaments/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     ...values,
-      //     tournamentId: tournament.id
-      //   })
-      // });
-      
-      // if (!response.ok) throw new Error('Registration failed');
       
       setIsSuccess(true);
       toast.success("Registration successful!", {

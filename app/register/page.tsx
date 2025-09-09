@@ -101,6 +101,9 @@ export default function RegisterPage() {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // COMMENTED OUT - ORIGINAL BACKEND SUBMISSION
+    // TODO: Uncomment when reconnecting to backend
+    /*
     // Create FormData for file upload
     const formData = new FormData();
     
@@ -113,9 +116,38 @@ export default function RegisterPage() {
       }
     });
 
-    console.log('Form data prepared for submission:', values);
-    console.log('Photo file:', photoFile);
-    toast.success("Registration submitted successfully!");
+    // Submit to backend API
+    fetch('/api/members', {
+      method: 'POST',
+      body: formData
+    }).then(response => {
+      if (response.ok) {
+        toast.success("Registration submitted successfully!");
+        form.reset();
+        setPhotoFile(null);
+        setPhotoPreview(null);
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
+    }).catch(error => {
+      console.error('Registration error:', error);
+      toast.error("Registration failed. Please try again.");
+    });
+    */
+    
+    // MOCK SUBMISSION - TEMPORARY REPLACEMENT
+    console.log('Mock registration data:', values);
+    console.log('Mock photo file:', photoFile);
+    
+    toast.success("Registration submitted successfully!", {
+      description: "Your membership application has been received and will be processed soon.",
+      duration: 5000,
+    });
+    
+    // Reset form after successful submission
+    form.reset();
+    setPhotoFile(null);
+    setPhotoPreview(null);
   }
 
   return (
