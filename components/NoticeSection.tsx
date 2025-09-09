@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import NoticeCard from './notices/NoticeCard';
 import NoticeDetailModal from './notices/NoticeDetailModal';
 import { Notice } from '@/types/notice';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // MOCK DATA IMPORT - TEMPORARY
 import { mockApi } from '@/lib/mockData';
+
 
 // Convert mock notices to frontend Notice format
 const convertMockNoticeToFrontend = (mockNotice: any): Notice => ({

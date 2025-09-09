@@ -135,11 +135,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
           <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
+              <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="lg:hidden">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
+              </Sheet>
               <h1 className="text-xl font-semibold text-gray-900">
                 {navigation.find(item => item.href === pathname)?.name || 'Admin Panel'}
               </h1>
