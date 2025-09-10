@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Bell, Filter } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import NoticeCard from '@/components/notices/NoticeCard';
